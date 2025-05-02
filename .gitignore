@@ -1,0 +1,5 @@
+build/
+dist/
+py_assist.egg-info/
+__pycache__/
+*.log

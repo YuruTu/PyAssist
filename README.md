@@ -1,2 +1,11 @@
-# OfficeTool
-The office expansion library based on Python
+# PyAssist
+
+# Usage Tutorial
+## install
+```
+pip install .
+```
+## uninstall
+```
+pip uninstall py_assist
+```
