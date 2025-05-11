@@ -7,6 +7,7 @@
 @copyright: (c) 2025 Yuru.Tu. All rights reserved.
 """
 import logging
+from py_assist.pattern.singleton import SingletonType
 
 # 配置日志
 def setup_logging(log_file='app.log'):
@@ -32,3 +33,39 @@ def setup_logging(log_file='app.log'):
     logger.addHandler(file_handler)
 
     return logger
+
+class LoggerSingleton(metaclass=SingletonType):
+    """
+    Singleton logger class. It configures the Handler/Formatter only once during initialization.
+    Subsequent calls return the same underlying Logger object.
+    """
+    def __init__(self, name: str = __name__):
+        # Retrieve or create a named Logger
+        self._logger = logging.getLogger(name)
+        # Add a handler only on first construction to avoid duplicate outputs
+        if not self._logger.handlers:
+            self._logger.setLevel(logging.INFO)
+            ch = logging.StreamHandler()
+            fmt = logging.Formatter("%(asctime)s %(name)s [%(levelname)s] %(message)s")
+            ch.setFormatter(fmt)
+            self._logger.addHandler(ch)
+
+    # Expose common logging methods
+    def debug(self, msg, *args, **kwargs):
+        self._logger.debug(msg, *args, **kwargs)
+
+    def info(self, msg, *args, **kwargs):
+        self._logger.info(msg, *args, **kwargs)
+
+    def warning(self, msg, *args, **kwargs):
+        self._logger.warning(msg, *args, **kwargs)
+
+    def error(self, msg, *args, **kwargs):
+        self._logger.error(msg, *args, **kwargs)
+
+    def exception(self, msg, *args, **kwargs):
+        self._logger.exception(msg, *args, **kwargs)
+
+    def get_underlying(self) -> logging.Logger:
+        """Returns the native Logger object if direct access is needed."""
+        return self._logger
